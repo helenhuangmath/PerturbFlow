@@ -62,7 +62,7 @@ _ANNOT_FS  = 10
 # ---------------------------------------------------------------------------
 
 def _to_dense(x):
-    return x.A if hasattr(x, "A") else np.asarray(x)
+    return x.toarray() if hasattr(x, "toarray") else np.asarray(x)
 
 
 def _two_sided_pval(z: np.ndarray) -> np.ndarray:

@@ -33,7 +33,7 @@ import pandas as pd
 
 def _to_dense(x):
     # Convert a sparse matrix slice to a dense numpy array.
-    return x.A if hasattr(x, "A") else np.asarray(x)
+    return x.toarray() if hasattr(x, "toarray") else np.asarray(x)
 
 
 def compute_effect_decomposition(adata, min_cells=5):

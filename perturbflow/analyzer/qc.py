@@ -41,8 +41,8 @@ _LEGEND_FS = 11
 
 def _to_dense(x):
     # Convert a sparse matrix slice to a dense numpy array.
-    # Works transparently on both scipy sparse (.A) and dense arrays.
-    return x.A if hasattr(x, "A") else np.asarray(x)
+    # Works across scipy sparse versions and dense arrays.
+    return x.toarray() if hasattr(x, "toarray") else np.asarray(x)
 
 
 def _target_expr_reduction(adata) -> np.ndarray:

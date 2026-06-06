@@ -76,7 +76,7 @@ _BUILTIN_TF_PRIOR = {
 # Helpers
 # -----------------------------------------------------------------------------
 def _to_dense(x):
-    return x.A if hasattr(x, "A") else np.asarray(x)
+    return x.toarray() if hasattr(x, "toarray") else np.asarray(x)
 
 
 def _try_parquet():

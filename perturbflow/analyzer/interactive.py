@@ -106,7 +106,7 @@ def _compute_gsea_rows(deg_df: pd.DataFrame, top_n: int = 15) -> list[dict]:
 
 
 def _to_dense(x):
-    return x.A if hasattr(x, "A") else np.asarray(x)
+    return x.toarray() if hasattr(x, "toarray") else np.asarray(x)
 
 
 def _safe_float(v):

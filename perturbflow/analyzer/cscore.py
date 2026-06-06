@@ -90,7 +90,7 @@ _COL_SHIFT = "#E8A838"   # warm amber   — weight-shift on preserved edges
 # ---------------------------------------------------------------------------
 
 def _to_dense(x):
-    return x.A if hasattr(x, "A") else np.asarray(x)
+    return x.toarray() if hasattr(x, "toarray") else np.asarray(x)
 
 
 def _pearson_corrmat(x: np.ndarray) -> np.ndarray:

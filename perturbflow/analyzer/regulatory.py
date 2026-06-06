@@ -78,7 +78,7 @@ _PNG_KWARGS = {"optimize": True, "compress_level": 9}
 # ---------------------------------------------------------------------------
 
 def _to_dense(x):
-    return x.A if hasattr(x, "A") else np.asarray(x)
+    return x.toarray() if hasattr(x, "toarray") else np.asarray(x)
 
 
 def _save_png(fig, out_path: Path, tight: bool = True) -> None:

@@ -57,7 +57,7 @@ def normalize_and_embed(adata, random_state=0, leiden_resolution=0.5):
         from sklearn.decomposition import PCA
         from sklearn.cluster import KMeans
 
-        x = adata.X.A if hasattr(adata.X, "A") else np.asarray(adata.X)
+        x = adata.X.toarray() if hasattr(adata.X, "toarray") else np.asarray(adata.X)
         x = np.log1p(x)
         x = x - x.mean(axis=0, keepdims=True)  # centre genes
         pca = PCA(n_components=min(30, x.shape[1] - 1, x.shape[0] - 1), random_state=random_state)

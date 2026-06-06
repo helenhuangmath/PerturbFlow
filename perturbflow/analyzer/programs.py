@@ -58,7 +58,7 @@ def infer_programs(adata, gene_sets=None):
                 score = np.nan  # none of the program genes are in the data
             else:
                 x = adata.X[pm][:, idx]
-                score = float((x.A if hasattr(x, "A") else x).mean())
+                score = float((x.toarray() if hasattr(x, "toarray") else x).mean())
             rows.append(
                 {
                     "perturbation": perturb,
