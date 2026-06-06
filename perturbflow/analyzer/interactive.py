@@ -4,8 +4,8 @@
 # Self-contained interactive HTML report for Perturb-seq results.
 #
 # Design:
-#   7 tabs: Home | QC | UMAP Explorer | Heatmaps | Perturbation |
-#           Gene Expression | Parameters
+#   Tabs: Home | QC | Heatmaps | Perturbation | Gene Network |
+#         Gene Expression | Cell States | C-Score | Regulatory
 #   * Scales to thousands of perturbations: top-N dropdown + "Show all".
 #   * Home: dataset summary, pipeline steps, top-perturbation bar.
 #   * QC: violins for expression metrics + cells-per-perturbation bar.
@@ -14,7 +14,6 @@
 #   * Perturbation: volcano, UMAP highlight, DEG bar, paginated table,
 #     pathway enrichment bar.
 #   * Gene Expression: box plots per perturbation + log2FC bar.
-#   * Parameters: config table with descriptions.
 #   * All charts Plotly.js, bundled next to the HTML for offline cluster use.
 # =============================================================================
 
@@ -660,7 +659,6 @@ def _html_template() -> str:
         '  <button onclick="showTab(\'states\',this)">Cell States</button>\n'
         '  <button onclick="showTab(\'cscore\',this)">C-Score</button>\n'
         '  <button onclick="showTab(\'regulatory\',this)">Regulatory</button>\n'
-        '  <button onclick="showTab(\'params\',this)">Parameters</button>\n'
         '  <h3>Perturbation</h3>\n'
         '  <input id="sb-pert-search" type="text" placeholder="Search perturbation\u2026"\n'
         '         oninput="filterSidebarPerts(this.value)">\n'
@@ -683,7 +681,6 @@ def _html_template() -> str:
         '    <button class="tab-btn" onclick="showTab(\'states\',null,\'tab\')">Cell States</button>\n'
         '    <button class="tab-btn" onclick="showTab(\'cscore\',null,\'tab\')">C-Score</button>\n'
         '    <button class="tab-btn" onclick="showTab(\'regulatory\',null,\'tab\')">Regulatory</button>\n'
-        '    <button class="tab-btn" onclick="showTab(\'params\',null,\'tab\')">Parameters</button>\n'
         '  </div>\n'
         + _TAB_HOME
         + _TAB_QC
@@ -694,7 +691,6 @@ def _html_template() -> str:
         + _TAB_STATES
         + _TAB_CSCORE
         + _TAB_REGULATORY
-        + _TAB_PARAMS
         + '</main>\n'
         '</div>\n'
         '<script>\n'
@@ -1269,66 +1265,7 @@ _TAB_CSCORE = (
     '</div>\n'
 )
 
-_TAB_PARAMS = (
-    '<div class="tab-pane" id="tab-params">\n'
-    '  <h2>Analysis Parameters</h2>\n'
-    '  <p>Pipeline settings are grouped by analysis step so the report reflects the multi-step PerturbFlow Analyzer workflow.</p>\n'
-    '  <h3>Pipeline Steps</h3>\n'
-    '  <div class="tbl-wrap" style="margin-top:12px;">\n'
-    '    <table class="param-table">\n'
-    '      <thead><tr><th>Step</th><th>Status</th><th>Purpose</th><th>Key parameters</th></tr></thead>\n'
-    '      <tbody id="step-param-tbody"></tbody>\n'
-    '    </table>\n'
-    '  </div>\n'
-    '  <h3>All Run Parameters</h3>\n'
-    '  <div class="tbl-wrap" style="margin-top:18px;">\n'
-    '    <table class="param-table">\n'
-    '      <thead><tr><th>Parameter</th><th>Value</th><th>Description</th></tr></thead>\n'
-    '      <tbody id="param-tbody"></tbody>\n'
-    '    </table>\n'
-    '  </div>\n'
-    '</div>\n'
-)
-
 _JS_BODY = r"""
-const PARAM_DESC = {
-  min_genes:"Minimum genes per cell for QC pass",
-  max_pct_mt:"Maximum % mitochondrial reads for QC pass",
-  min_cells_per_perturbation:"Minimum cells to retain a perturbation",
-  random_state:"Random seed for UMAP/Leiden reproducibility",
-  n_neighbors:"k-NN graph neighbors (UMAP/scoring)",
-  leiden_resolution:"Leiden clustering resolution",
-  eda_n_top_genes:"Top genes in EDA heatmaps",
-  eda_max_cells_heatmap:"Max cells for gene\u00d7cell heatmap",
-  deg_n_top_perturbations:"Perturbations analyzed in DEG step",
-  deg_logfc_threshold:"|log\u2082FC| cutoff for significance",
-  deg_pval_threshold:"Adjusted p-value cutoff",
-  deg_n_top_heatmap:"Top DEGs per perturbation in heatmap",
-  genenet_n_top_genes:"HVGs for co-expression network",
-  genenet_n_gene_clusters:"Gene module clusters",
-  genenet_corr_threshold:"Pearson correlation threshold for edges",
-  state_enrich_min_cells:"Minimum cells in perturbation group to test",
-  state_enrich_fdr_threshold:"BH-FDR threshold for state enrichment significance",
-  regulatory_fdr_threshold:"FDR cutoff for TF regulatory edges",
-  regulatory_lfc_threshold:"|log\u2082FC| cutoff for TF regulatory edges",
-};
-const STEP_PARAMS = [
-  {step:'qc', purpose:'Filter low-quality cells and sparse perturbation groups.', params:['min_genes','max_pct_mt','min_cells_per_perturbation']},
-  {step:'preprocess', purpose:'Normalize counts, select features, embed cells, and assign cell-state clusters.', params:['random_state','n_neighbors','leiden_resolution']},
-  {step:'eda', purpose:'Create exploratory cell-count, gene-expression, correlation, and similarity heatmaps.', params:['eda_n_top_genes','eda_max_cells_heatmap']},
-  {step:'score', purpose:'Estimate perturbation burden, guide confidence, target reduction, and perturbation score.', params:['n_neighbors','n_top_genes_signature']},
-  {step:'effects', purpose:'Separate transcriptional response from cell-state shift effects.', params:['n_neighbors']},
-  {step:'trajectory', purpose:'Quantify pseudotime and commitment-shift behavior after perturbation.', params:['random_state']},
-  {step:'programs', purpose:'Infer perturbation-associated gene programs.', params:['n_top_genes_signature']},
-  {step:'interaction', purpose:'Summarize interaction scores for combinatorial perturbation labels when present.', params:[]},
-  {step:'deg', purpose:'Identify differential expression against control and produce volcano plots and DEG tables.', params:['deg_n_top_perturbations','deg_logfc_threshold','deg_pval_threshold','deg_n_top_heatmap']},
-  {step:'genenet', purpose:'Compare control and perturbation gene co-expression network structure.', params:['genenet_n_top_genes','genenet_n_gene_clusters','genenet_corr_threshold']},
-  {step:'state_enrich', purpose:'Chi-square test of cell state enrichment/depletion for each perturbation vs control.', params:['state_enrich_min_cells','state_enrich_fdr_threshold']},
-  {step:'regulatory', purpose:'Perturbation effect correlation and TF-TF regulatory heatmap and network.', params:['regulatory_fdr_threshold','regulatory_lfc_threshold']},
-  {step:'report', purpose:'Write static and interactive web reports.', params:['eda_n_top_genes']},
-  {step:'bundle', purpose:'Emit viewer-ready parquet and JSON artifacts.', params:['bundle_top_de_per_pert','bundle_min_de_hits_per_gene','bundle_schema_version']},
-];
-
 const _tabInit = {};
 let _dataReady=null;
 function emptyDataStub(){
@@ -1347,20 +1284,14 @@ function loadReportData(){
   if(_dataReady) return _dataReady;
   const hdr=document.getElementById('hdr-summary');
   if(hdr) hdr.textContent='Loading results data...';
-  _dataReady=fetch('interactive_data.json', {cache:'no-store'})
-    .then(r=>{
-      if(!r.ok) throw new Error('Could not load interactive_data.json: HTTP '+r.status);
-      return r.json();
-    })
-    .then(data=>{
-      D=Object.assign(emptyDataStub(), data||{});
-      if(hdr) hdr.textContent='Results data loaded';
-      return D;
-    })
-    .catch(err=>{
-      showStartupError(new Error(String(err && err.message || err) + '. If you opened the HTML directly with file://, serve the results folder with a small web server, for example: python -m http.server 8899'));
-      throw err;
-    });
+  if(D && Array.isArray(D.perturbations)){
+    D=Object.assign(emptyDataStub(), D||{});
+    if(hdr) hdr.textContent='Results data loaded';
+    _dataReady=Promise.resolve(D);
+    return _dataReady;
+  }
+  _dataReady=Promise.reject(new Error('Embedded report data is missing. Regenerate interactive_report.html with PerturbFlow.'));
+  _dataReady.catch(showStartupError);
   return _dataReady;
 }
 let _plotlyLoading=false;
@@ -1432,7 +1363,6 @@ function _initTab(n) {
   if (n==='states')     ensurePlotly(renderStateEnrich);
   if (n==='regulatory') ensurePlotly(initRegulatoryTab);
   if (n==='cscore')     ensurePlotly(initCscoreTab);
-  if (n==='params')     renderParams();
 }
 
 const BL = {
@@ -2146,20 +2076,6 @@ function renderGeneExpr(gene){
          yaxis:{automargin:true,tickfont:{size:12}}}),PC);
 }
 
-/* PARAMS */
-function renderParams(){
-  const cfg=D.config||{};
-  const done = new Set(cfg._completed_steps||[]);
-  const stepBody=document.getElementById('step-param-tbody');
-  stepBody.innerHTML=STEP_PARAMS.map(s=>{
-    const pv=s.params.length?s.params.map(k=>'<span class="pn">'+k+'</span>: <span class="pv">'+(cfg[k]!==undefined?JSON.stringify(cfg[k]):'default')+'</span>').join('<br>'):'No tunable parameters';
-    return '<tr><td class="pn">'+s.step+'</td><td>'+(done.has(s.step)?'Completed':'Not recorded')+'</td><td style="color:var(--muted);font-size:13px;">'+s.purpose+'</td><td>'+pv+'</td></tr>';
-  }).join('');
-  const keys=Object.keys(cfg).filter(k=>!k.startsWith('_'));
-  const tbody=document.getElementById('param-tbody');
-  if(!keys.length){tbody.innerHTML='<tr><td colspan="3" style="color:var(--muted);padding:14px;">No config data available.</td></tr>';return;}
-  tbody.innerHTML=keys.map(k=>'<tr><td class="pn">'+k+'</td><td class="pv">'+JSON.stringify(cfg[k])+'</td><td style="color:var(--muted);font-size:13px;">'+(PARAM_DESC[k]||'')+'</td></tr>').join('');
-}
 
 /* Save the live Plotly UMAP as a high-resolution PNG. Filename keys off the
    "Color by" select so e.g. score / gene / state runs land on disk under
@@ -2563,12 +2479,7 @@ def build_interactive_report(
     json_str = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     data_path = out / "interactive_data.json"
     data_path.write_text(json_str, encoding="utf-8")
-    stub = {
-        "summary": data.get("summary", {}),
-        "config": data.get("config", {}),
-    }
-    stub_str = json.dumps(stub, ensure_ascii=False, separators=(",", ":"))
-    html = template.replace("{DATA_STUB}", stub_str)
+    html = template.replace("{DATA_STUB}", json_str)
 
     out_path = out / "interactive_report.html"
     out_path.write_text(html, encoding="utf-8")
