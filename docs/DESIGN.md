@@ -2,14 +2,6 @@
 
 Combines the scientific modules from `tmp_plan_1` and the phased build from `tmp_plan_2` (already partially implemented in [perturbflow/analyzer/](perturbflow/analyzer/)) with the bundle + interactive-viewer architecture from `tmp_plan_3`.
 
-## Plan evaluation
-
-- **plan_1** defines the science (effective perturbation scoring, dual-level effect decomposition, trajectory, programs, interactions). Adopted as the module catalog.
-- **plan_2** turns those modules into a 9-phase build with concrete code, tests, and CI. Adopted as the build sequence — the current [perturbflow/analyzer/](perturbflow/analyzer/) tree already covers Phases 0–7 and a static-HTML Phase 8.
-- **plan_3** addresses the part the other two miss: how the user actually *explores* results — a results-bundle contract plus a static viewer with perturbation, gene, and network pages. Adopted as the delivery architecture.
-
-The user-facing requirements (interactive exploration, per-gene / per-perturbation lookup and comparison, TF and complex networks) are squarely the plan_3 layer. So the right move is **not** to pick one plan but to extend the existing plan_1/2 implementation with a plan_3 viewer.
-
 ## Target architecture
 
 ```
@@ -41,14 +33,13 @@ From [perturbflow/analyzer/](perturbflow/analyzer/) and [pipeline.py](perturbflo
 - ingest/QC/preprocess/score/effects/trajectory/programs/interaction modules
 - CLI entry (`perturbflow run`)
 - Static-HTML report ([report.py](perturbflow/analyzer/report.py))
-- Bundle emitter ([bundle.py](perturbflow/analyzer/bundle.py)) — parquet + JSON results bundle
-- **EDA module** ([eda.py](perturbflow/analyzer/eda.py)) — cells-per-group bar chart, cluster
+- Bundle emitter ([bundle.py](../perturbflow/analyzer/bundle.py)) — parquet + JSON results bundle
+- **EDA module** ([eda.py](../perturbflow/analyzer/eda.py)) — cells-per-group bar chart, cluster
   proportion stacked bar, gene×cell heatmap, gene×perturbation pseudobulk
   heatmap, gene–gene Pearson correlation heatmap, UMAP by cell-state cluster
-- **DEG module** ([deg.py](perturbflow/analyzer/deg.py)) — identifies top perturbations, runs
+- **DEG module** ([deg.py](../perturbflow/analyzer/deg.py)) — identifies top perturbations, runs
   Welch t-test DEG analysis per perturbation vs control, volcano plots, DEG
   tables (CSV), and a top-perturbations log₂FC summary heatmap
-- SLURM submission scripts
 
 ## What needs to be added
 
@@ -110,9 +101,9 @@ Each phase is one PR-sized chunk. Phases 0–7 of `tmp_plan_2` are already done;
 
 | Phase | Deliverable | New code | Status |
 |---|---|---|---|
-| **A** | Bundle schema + emitter | [bundle.py](perturbflow/analyzer/bundle.py) | ✅ done |
-| **EDA** | Cells-per-group, 3 heatmaps, cluster proportions, UMAP by cluster | [eda.py](perturbflow/analyzer/eda.py) | ✅ done |
-| **DEG** | Top-perturbation DEG, volcano plots, summary heatmap | [deg.py](perturbflow/analyzer/deg.py) | ✅ done |
+| **A** | Bundle schema + emitter | [bundle.py](../perturbflow/analyzer/bundle.py) | done |
+| **EDA** | Cells-per-group, 3 heatmaps, cluster proportions, UMAP by cluster | [eda.py](../perturbflow/analyzer/eda.py) | done |
+| **DEG** | Top-perturbation DEG, volcano plots, summary heatmap | [deg.py](../perturbflow/analyzer/deg.py) | done |
 | **B** | TF / module / network artifacts | extend [programs.py](perturbflow/analyzer/programs.py): decoupler TF activity, NMF modules, TF-network JSON serializer | pending |
 | **C** | Quarto viewer skeleton | `viewer/` with landing, browse-perturbations, perturbation-page (Plotly), reading bundle | pending |
 | **D** | Gene page + search | inverted index in bundle, gene page, FlexSearch wiring | ~2 days |

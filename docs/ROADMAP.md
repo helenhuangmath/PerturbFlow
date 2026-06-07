@@ -18,13 +18,13 @@ perturbation datasets.
 
 | Status | Item |
 | --- | --- |
-| ✅ Done | AnnData-native analyzer pipeline (`perturbflow analyzer`): QC, preprocess, EDA, scoring, effects, trajectory, programs, interaction, DEG, gene/TF networks, C-scores, regulatory |
-| ✅ Done | `perturbflow prepare` schema standardization (perturbation + control-label normalization, optional cell-state) |
-| ✅ Done | Static and interactive HTML reports |
-| ✅ Done | Versioned results `bundle/` schema for downstream viewers |
-| 🔜 Planned | Documented, versioned AnnData schema contract (`.obs` / `.uns` keys) |
-| 🔜 Planned | Curated reference dataset loaders (≥ 3 public Perturb-seq datasets) |
-| 🔜 Planned | Stable public Python API surface and semantic-versioning policy |
+| Done | AnnData-native analyzer pipeline (`perturbflow analyzer`): QC, preprocess, EDA, scoring, effects, trajectory, programs, interaction, DEG, gene/TF networks, C-scores, regulatory |
+| Done | `perturbflow prepare` schema standardization (perturbation + control-label normalization, optional cell-state) |
+| Done | Static and interactive HTML reports |
+| Done | Versioned results `bundle/` schema for downstream viewers |
+| Planned | Documented, versioned AnnData schema contract (`.obs` / `.uns` keys) |
+| Planned | Curated reference dataset loaders (≥ 3 public Perturb-seq datasets) |
+| Planned | Stable public Python API surface and semantic-versioning policy |
 
 ## Aim 2 — Model-ready perturbation biology
 
@@ -35,10 +35,10 @@ interoperability toolkit.
 
 | Status | Item |
 | --- | --- |
-| ✅ Done | `perturbflow interpret` structured handoff exports (no automatic data upload) |
-| 🔜 Planned | Standardized model-ready export format for perturbation datasets |
-| 🔜 Planned | Scalable / chunked processing for large screens |
-| 🔜 Planned | Workflow-manager interfaces (e.g. Nextflow / Snakemake adapters) |
+| Done | `perturbflow interpret` structured handoff exports (no automatic data upload) |
+| Planned | Standardized model-ready export format for perturbation datasets |
+| Planned | Scalable / chunked processing for large screens |
+| Planned | Workflow-manager interfaces (e.g. Nextflow / Snakemake adapters) |
 
 ## Aim 3 — Community benchmarks for perturbation biology
 
@@ -49,10 +49,10 @@ rewiring-aware metrics, and reproducible benchmarking workflows.
 
 | Status | Item |
 | --- | --- |
-| 🧪 Reserved | `perturbflow.benchmark` namespace reserved for evaluation tooling |
-| 🔜 Planned | Baseline-calibrated metrics (compare methods against simple baselines) |
-| 🔜 Planned | Biological-distance-aware and rewiring-aware evaluation metrics |
-| 🔜 Planned | Reproducible benchmarking workflows and a public evaluation portal |
+| Reserved | `perturbflow.benchmark` namespace reserved for evaluation tooling |
+| Planned | Baseline-calibrated metrics (compare methods against simple baselines) |
+| Planned | Biological-distance-aware and rewiring-aware evaluation metrics |
+| Planned | Reproducible benchmarking workflows and a public evaluation portal |
 
 ## How to get involved
 

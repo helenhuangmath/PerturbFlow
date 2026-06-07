@@ -119,22 +119,12 @@ perturbflow analyzer --input prepared/my_data.perturbflow.h5ad --output results/
 perturbflow list-steps
 ```
 
-## 5. Run On Slurm
+## 5. Run On A Cluster
 
-Use the included analyzer Slurm wrapper as a template:
-
-```bash
-sbatch run_perturbflow_analyzer.sbatch prepared/my_data.perturbflow.h5ad results/my_run configs/cluster_default.json
-```
-
-For a new dataset, update:
-
-- `CODE_DIR`
-- `ENV_DIR`
-- input `.h5ad`
-- output directory
-- config JSON
-- requested resources and wall time
+On a cluster, run the same `perturbflow analyzer` command inside your usual
+job environment. For each dataset, set the input `.h5ad`, output directory,
+config JSON, requested resources, and wall time according to your local
+scheduler.
 
 ## 6. Use From Python
 

@@ -161,7 +161,7 @@ coerce_metadata <- function(obj, cfg, perturbation_override = NULL) {
   pert_col <- perturbation_override %||% cfg$perturbation_col %||%
     first_present(c("perturbation", "guide", "gRNA", "sgRNA", "crispr", "gene", "target"), meta_names)
   if (is.null(pert_col) || !pert_col %in% meta_names) {
-    stop("Could not find perturbation metadata column. Set perturbation_col in config or pass the fourth sbatch argument.")
+    stop("Could not find perturbation metadata column. Set perturbation_col in config or pass the perturbation column argument.")
   }
 
   target_col <- cfg$target_col %||% first_present(c("target", "gene", "target_gene", "feature"), meta_names)

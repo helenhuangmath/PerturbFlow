@@ -14,7 +14,7 @@ distinguishes perturbations that *amplify* existing transcriptional programs
 from those that *reorganize* regulatory relationships — interpretable signal
 that prediction-accuracy metrics alone miss.
 
-The project is organized around three aims (see [`ROADMAP.md`](ROADMAP.md)):
+The project is organized around three aims (see [`docs/ROADMAP.md`](docs/ROADMAP.md)):
 
 1. **Community-standard infrastructure** — stable AnnData schemas, reproducible
    workflows, interactive reports, reference datasets, and interoperable APIs.
@@ -37,6 +37,16 @@ work on the roadmap.
 - `report.html` and `interactive_report.html` for browser-based review.
 - A viewer-ready `bundle/` directory for downstream web apps.
 - `agent_handoff/` files that summarize the run for downstream review without including raw count matrices.
+
+## Interface Preview
+
+**Analyzer**
+
+![PerturbFlow Analyzer interface](docs/assets/perturbflow-analyzer.png)
+
+**Predictor**
+
+![PerturbFlow Predictor interface](docs/assets/perturbflow-predictor.png)
 
 ## Install
 
@@ -223,20 +233,20 @@ perturbflow/
 ├── examples/             # Notebook templates for common workflows
 ├── scripts/              # Companion scripts, including Seurat/Mixscape
 ├── docs/                 # MkDocs documentation site
-├── ROADMAP.md            # Aims, milestones, and status
-├── CONTRIBUTING.md
+├── docs/ROADMAP.md       # Aims, milestones, and status
+├── docs/CONTRIBUTING.md
 ├── README.md
-├── QUICK_START.md
-├── METHOD.md
-├── RESULT.md
+├── docs/QUICK_START.md
+├── docs/METHOD.md
+├── docs/RESULT.md
 └── pyproject.toml
 ```
 
 ## Project Documents
 
-- [`ROADMAP.md`](ROADMAP.md) — aims mapped to concrete work and status.
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — how to get involved.
-- [`DESIGN.md`](DESIGN.md) / [`METHOD.md`](METHOD.md) — architecture and methods.
+- [`docs/ROADMAP.md`](docs/ROADMAP.md) — aims mapped to concrete work and status.
+- [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) — how to get involved.
+- [`docs/DESIGN.md`](docs/DESIGN.md) / [`docs/METHOD.md`](docs/METHOD.md) — architecture and methods.
 
 ## Web Documentation
 
